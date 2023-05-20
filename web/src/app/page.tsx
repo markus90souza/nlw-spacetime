@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { User } from 'lucide-react'
 
 import spacetimeLogo from './../assets/nlw-spacetime-logo.svg'
+
 export default function Home() {
   return (
     <main className="grid min-h-screen grid-cols-2">
@@ -30,7 +31,7 @@ export default function Home() {
         <div className="space-y-5">
           <Image src={spacetimeLogo} alt="NLW Spacetime" />
 
-          <div className="max-w-[420px] space-y-1">
+          <div className="w-[420px] space-y-1">
             <h1 className="text-5xl font-bold leading-tight text-gray-50">
               Sua cápsula do tempo
             </h1>
