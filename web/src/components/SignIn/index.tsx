@@ -1,9 +1,11 @@
 import { User } from 'lucide-react'
+import Link from 'next/link'
 
 export function SignIn() {
+  const githubOAuthUrl = 'https://github.com/login/oauth/authorize?client_id='
   return (
-    <a
-      href={`https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLCI_GITHUB_CLIENT_ID}`}
+    <Link
+      href={`${githubOAuthUrl}${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`}
       className="flex items-center gap-3 text-left transition-colors hover:text-gray-50"
     >
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-400">
@@ -13,6 +15,6 @@ export function SignIn() {
       <p className="max-w-[180px] text-sm leading-snug">
         <span className="underline">Crie sua conta</span>e salve suas memórias!
       </p>
-    </a>
+    </Link>
   )
 }
