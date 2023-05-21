@@ -1,12 +1,11 @@
+import axios from 'axios'
 import { FastifyInstance } from 'fastify'
-
 import { z } from 'zod'
 
-import axios from 'axios'
 import { prisma } from '../lib/prisma'
 
 export const authRoutes = async (app: FastifyInstance) => {
-  app.post('/authorize', async (request) => {
+  app.post('/register', async (request) => {
     const bodySchema = z.object({
       code: z.string(),
     })
@@ -65,8 +64,13 @@ export const authRoutes = async (app: FastifyInstance) => {
       })
     }
 
+    const token = app.jwt.sign(
+      { name: user.name, avatar_url: user.avatar_url },
+      { sub: user.id, expiresIn: '30 days' },
+    )
+
     return {
-      user,
+      token,
     }
   })
 }
