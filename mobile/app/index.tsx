@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { styled } from 'nativewind'
 import {
   ImageBackground,
@@ -7,6 +8,8 @@ import {
   View,
 } from 'react-native'
 
+import * as WebBrowser from 'expo-web-browser'
+import * as SecureStore from 'expo-secure-store'
 import {
   useFonts,
   Roboto_400Regular,
@@ -15,19 +18,66 @@ import {
 
 import { BaiJamjuree_700Bold } from '@expo-google-fonts/bai-jamjuree'
 
-import bgBlur from './src/assets/bg-blur.png'
-import StripesSVG from './src/assets/stripes.svg'
-import NlwSpacetimeLogo from './src/assets/nlw-spacetime-logo.svg'
-const Stripes = styled(StripesSVG)
+import bgBlur from '../src/assets/bg-blur.png'
+import StripesSVG from '../src/assets/stripes.svg'
+import NlwSpacetimeLogo from '../src/assets/nlw-spacetime-logo.svg'
 
+import { useAuthRequest, makeRedirectUri } from 'expo-auth-session'
+import { useEffect } from 'react'
+import { api } from '../src/libs/api'
+
+import { useRouter } from 'expo-router'
+
+const Stripes = styled(StripesSVG)
 const NLWSpacetime = styled(NlwSpacetimeLogo)
 
+// Endpoint
+const discovery = {
+  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+  tokenEndpoint: 'https://github.com/login/oauth/access_token',
+  revocationEndpoint:
+    'https://github.com/settings/connections/applications/4330bcd270c18eb9b0ca',
+}
+
+WebBrowser.maybeCompleteAuthSession()
+
 export default function App() {
+  const { push } = useRouter()
   const [fontsLoaded] = useFonts({
     BaiJamjuree_700Bold,
     Roboto_400Regular,
     Roboto_700Bold,
   })
+
+  const [request, response, signInWithGithub] = useAuthRequest(
+    {
+      clientId: '4330bcd270c18eb9b0ca',
+      scopes: ['identity'],
+
+      redirectUri: makeRedirectUri({
+        scheme: 'spacetime',
+      }),
+    },
+    discovery,
+  )
+
+  const handleOAuthGithubCode = async (code: string) => {
+    const response = await api.post('/register', { code })
+
+    const { token } = response.data
+
+    await SecureStore.setItemAsync('token', token)
+  }
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { code } = response.params
+
+      handleOAuthGithubCode(code)
+
+      push('/memories')
+    }
+  }, [response])
 
   if (!fontsLoaded) {
     return null
@@ -62,6 +112,7 @@ export default function App() {
           <TouchableOpacity
             activeOpacity={0.7}
             className="rounded-full bg-green-500 px-5 py-2"
+            onPress={() => signInWithGithub()}
           >
             <Text className="font-alt text-sm uppercase text-black">
               COMEÇAR A CADASTRAR
