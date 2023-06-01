@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch ./src/server.ts",
-    "lint": "eslint src --ext .ts --fix"
+    "lint": "eslint src --ext .ts --fix",
+    "build": "tsup src --out-dir build"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +20,7 @@
     "@types/node": "^20.1.4",
     "dotenv": "^16.0.3",
     "eslint": "^8.40.0",
-    "prisma": "^4.14.1",
+    "prisma": "^4.15.0",
     "tsup": "^6.7.0",
     "tsx": "^3.12.7",
     "typescript": "^5.0.4"
@@ -26,7 +30,7 @@
     "@fastify/jwt": "^6.7.1",
     "@fastify/multipart": "^7.6.0",
     "@fastify/static": "^6.10.1",
-    "@prisma/client": "^4.14.1",
+    "@prisma/client": "^4.15.0",
     "axios": "^1.4.0",
     "fastify": "^4.17.0",
     "zod": "^3.21.4"
